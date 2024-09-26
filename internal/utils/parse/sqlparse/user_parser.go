@@ -21,7 +21,6 @@ func (p *UserParser) ParseRows(rows *sql.Rows) (*[]models.User, error) {
 			&user.Username,
 			&user.Password,
 			&user.Phone,
-			&user.TgChatId,
 			&user.Type); err != nil {
 			return nil, err
 		}
@@ -42,7 +41,6 @@ func (p *UserParser) ParseRow(row *sql.Row) (*models.User, error) {
 		&user.Username,
 		&user.Password,
 		&user.Phone,
-		&user.TgChatId,
 		&user.Type); err != nil {
 		return nil, err
 	}

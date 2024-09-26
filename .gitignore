@@ -1,4 +1,4 @@
 build
 storage/storage.db
-../.idea
+.idea
 .env
