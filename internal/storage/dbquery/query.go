@@ -28,7 +28,6 @@ const CreateUserTable = `
             username VARCHAR(255) NOT NULL,
             password VARCHAR(255) NOT NULL,
             phone VARCHAR(12) NOT NULL,
-            tg_chat_id INTEGER UNIQUE,
             type VARCHAR(255) NOT NULL
         )
     `

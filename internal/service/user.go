@@ -3,21 +3,12 @@ package service
 import (
 	"dario.cat/mergo"
 	"errors"
+	"fmt"
 	"github.com/ankodd/demoexam/core/internal/storage"
 	"github.com/ankodd/demoexam/core/internal/utils/errs"
 	"github.com/ankodd/demoexam/core/pkg/models"
 	"github.com/ankodd/demoexam/core/pkg/validate"
-	"strconv"
 )
-
-// UserIsAuthorized check if user authorized
-func UserIsAuthorized(chatID int64, s *storage.UserStorage) bool {
-	if storage.FieldIsExist(s, "chat_id", strconv.FormatInt(chatID, 10)) {
-		return true
-	}
-
-	return false
-}
 
 func UserFetch(id int64, s *storage.UserStorage) (*models.User, error) {
 	users, err := s.Fetch(id)
@@ -31,6 +22,7 @@ func UserFetch(id int64, s *storage.UserStorage) (*models.User, error) {
 func UserFetchAll(s *storage.UserStorage) (*[]models.User, error) {
 	users, err := s.FetchAll()
 	if err != nil {
+		fmt.Println(err)
 		return nil, errors.New(errs.InternalServerErr)
 	}
 

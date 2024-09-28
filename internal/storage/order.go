@@ -85,6 +85,7 @@ func (s *OrderStorage) FetchByKey(key, val string) (*[]models.Order, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	out, err := sqlparse.Order().ParseRows(rows)
 	if err != nil {

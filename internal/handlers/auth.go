@@ -5,7 +5,6 @@ import (
 	"github.com/ankodd/demoexam/core/internal/service"
 	"github.com/ankodd/demoexam/core/internal/utils/errs"
 	"github.com/ankodd/demoexam/core/internal/utils/msg"
-	"github.com/ankodd/demoexam/core/internal/utils/parse/requestparse"
 	"github.com/ankodd/demoexam/core/internal/utils/sl"
 	"github.com/ankodd/demoexam/core/pkg/models"
 	"log/slog"
@@ -62,29 +61,4 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, errs.InternalServerErr, http.StatusInternalServerError)
 		sl.ReqLog(http.StatusInternalServerError, h.logger, r, slog.LevelError)
 	}
-}
-
-func (h *UserHandler) IsAuthorized(w http.ResponseWriter, r *http.Request) {
-	// Parse ChatID
-	chatID, err := requestparse.ParseChatID(r)
-	if err != nil {
-		http.Error(w, errs.BadRequestErr, http.StatusBadRequest)
-		sl.ReqLog(http.StatusBadRequest, h.logger, r, slog.LevelError)
-		return
-	}
-
-	// Service logic
-	if !service.UserIsAuthorized(chatID, h.store) {
-		http.Error(w, errs.AuthorizationFailedErr, http.StatusUnauthorized)
-		sl.ReqLog(http.StatusUnauthorized, h.logger, r, slog.LevelError)
-		return
-	}
-
-	//Write response
-	if err := Write(w, msg.New(msg.UserIsAuthorized), http.StatusOK); err != nil {
-		http.Error(w, errs.InternalServerErr, http.StatusInternalServerError)
-		sl.ReqLog(http.StatusInternalServerError, h.logger, r, slog.LevelError)
-	}
-
-	sl.ReqLog(http.StatusOK, h.logger, r, slog.LevelInfo)
 }

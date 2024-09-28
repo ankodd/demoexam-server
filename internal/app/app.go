@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/ankodd/demoexam/core/internal/handlers"
+	"github.com/ankodd/demoexam/core/internal/handlers/cors"
 	"github.com/ankodd/demoexam/core/internal/storage"
 	"github.com/joho/godotenv"
 	"log"
@@ -46,21 +47,20 @@ func Run(logger *slog.Logger) error {
 
 	// Initial handlers
 	uHandler := handlers.NewUserHandler(userStorage, logger)
-	http.HandleFunc("/api/users", uHandler.FetchUsers)
-	http.HandleFunc("/api/users/", uHandler.FetchUser)
-	http.HandleFunc("/api/users/update/", uHandler.UpdateUser)
-	http.HandleFunc("/api/users/delete/", uHandler.DeleteUser)
-	http.HandleFunc("/api/users/registration", uHandler.Register)
-	http.HandleFunc("/api/users/login", uHandler.Login)
-	http.HandleFunc("/api/users/is_authorized/", uHandler.IsAuthorized)
+	http.HandleFunc("/api/users", cors.Middleware(uHandler.FetchUsers))
+	http.HandleFunc("/api/users/", cors.Middleware(uHandler.FetchUser))
+	http.HandleFunc("/api/users/update/", cors.Middleware(uHandler.UpdateUser))
+	http.HandleFunc("/api/users/delete/", cors.Middleware(uHandler.DeleteUser))
+	http.HandleFunc("/api/users/registration", cors.Middleware(uHandler.Register))
+	http.HandleFunc("/api/users/login", cors.Middleware(uHandler.Login))
 
 	oHandler := handlers.NewOrderHandler(orderStorage, logger)
-	http.HandleFunc("/api/orders", oHandler.FetchOrders)
-	http.HandleFunc("/api/orders/create", oHandler.AddOrder)
-	http.HandleFunc("/api/orders/", oHandler.FetchOrder)
-	http.HandleFunc("/api/orders/update/", oHandler.UpdateOrder)
-	http.HandleFunc("/api/orders/delete/", oHandler.DeleteOrder)
-	http.HandleFunc("/api/statistics", oHandler.Statistics)
+	http.HandleFunc("/api/orders", cors.Middleware(oHandler.FetchOrders))
+	http.HandleFunc("/api/orders/create", cors.Middleware(oHandler.AddOrder))
+	http.HandleFunc("/api/orders/", cors.Middleware(oHandler.FetchOrder))
+	http.HandleFunc("/api/orders/update/", cors.Middleware(oHandler.UpdateOrder))
+	http.HandleFunc("/api/orders/delete/", cors.Middleware(oHandler.DeleteOrder))
+	http.HandleFunc("/api/statistics", cors.Middleware(oHandler.Statistics))
 
 	// Start server
 	logger.Info("server listening", slog.String("port", port))
