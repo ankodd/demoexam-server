@@ -30,7 +30,7 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Write response
-	err = Write(w, msg.New(msg.LoginSuccess), http.StatusOK)
+	err = Write(w, map[string]int64{"id": user.ID}, http.StatusOK)
 	if err != nil {
 		http.Error(w, errs.InternalServerErr, http.StatusInternalServerError)
 		sl.ReqLog(http.StatusInternalServerError, h.logger, r, slog.LevelError)

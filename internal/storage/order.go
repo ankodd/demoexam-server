@@ -80,9 +80,13 @@ func (s *OrderStorage) Fetch(id int64) (*models.Order, error) {
 	return out, nil
 }
 
-func (s *OrderStorage) FetchByKey(key, val string) (*models.Order, error) {
-	row := s.db.QueryRow(fmt.Sprintf(dbquery.SelectKey, s.table, key), val)
-	out, err := sqlparse.Order().ParseRow(row)
+func (s *OrderStorage) FetchByKey(key, val string) (*[]models.Order, error) {
+	rows, err := s.db.Query(fmt.Sprintf(dbquery.SelectKey, s.table, key), val)
+	if err != nil {
+		return nil, err
+	}
+
+	out, err := sqlparse.Order().ParseRows(rows)
 	if err != nil {
 		return nil, err
 	}

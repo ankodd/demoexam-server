@@ -74,3 +74,12 @@ func OrderDelete(id int64, s *storage.OrderStorage) error {
 
 	return nil
 }
+
+func FetchOrdersByUserId(field string, id int64, s *storage.OrderStorage) (*[]models.Order, error) {
+	orders, err := s.FetchByKey(field, string(id))
+	if err != nil {
+		return nil, errors.New(errs.InternalServerErr)
+	}
+
+	return orders, nil
+}

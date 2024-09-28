@@ -148,3 +148,37 @@ func (h *OrderHandler) DeleteOrder(w http.ResponseWriter, r *http.Request) {
 
 	sl.ReqLog(http.StatusOK, h.logger, r, slog.LevelInfo)
 }
+
+// FetchOrderByUserId returns orders by user(executor or client) id
+func (h *OrderHandler) FetchOrderByUserId(w http.ResponseWriter, r *http.Request) {
+	// Parsing id
+	id, err := requestparse.ParseID(r)
+	if err != nil {
+		http.Error(w, errs.BadRequestErr, http.StatusBadRequest)
+		sl.ReqLog(http.StatusBadRequest, h.logger, r, slog.LevelError)
+		return
+	}
+
+	// Get field name
+	field := r.URL.Query().Get("field")
+	if field == "" {
+		http.Error(w, errs.BadRequestErr, http.StatusBadRequest)
+		sl.ReqLog(http.StatusBadRequest, h.logger, r, slog.LevelError)
+	}
+
+	// Service logic
+	orders, err := service.FetchOrdersByUserId(field, id, h.store)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		sl.ReqLog(http.StatusInternalServerError, h.logger, r, slog.LevelError)
+		return
+	}
+
+	// Write Response
+	if err := Write(w, &orders, http.StatusOK); err != nil {
+		http.Error(w, errs.InternalServerErr, http.StatusInternalServerError)
+		sl.ReqLog(http.StatusInternalServerError, h.logger, r, slog.LevelError)
+	}
+
+	sl.ReqLog(http.StatusOK, h.logger, r, slog.LevelInfo)
+}

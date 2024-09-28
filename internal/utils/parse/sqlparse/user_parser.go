@@ -16,7 +16,7 @@ func (p *UserParser) ParseRows(rows *sql.Rows) (*[]models.User, error) {
 	for rows.Next() {
 		var user models.User
 		if err := rows.Scan(
-			&user.Id,
+			&user.ID,
 			&user.CreatedAt,
 			&user.Username,
 			&user.Password,
@@ -36,7 +36,7 @@ func (p *UserParser) ParseRows(rows *sql.Rows) (*[]models.User, error) {
 func (p *UserParser) ParseRow(row *sql.Row) (*models.User, error) {
 	var user models.User
 	if err := row.Scan(
-		&user.Id,
+		&user.ID,
 		&user.CreatedAt,
 		&user.Username,
 		&user.Password,
