@@ -61,4 +61,6 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, errs.InternalServerErr, http.StatusInternalServerError)
 		sl.ReqLog(http.StatusInternalServerError, h.logger, r, slog.LevelError)
 	}
+
+	sl.ReqLog(http.StatusOK, h.logger, r, slog.LevelInfo)
 }

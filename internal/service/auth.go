@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"github.com/ankodd/demoexam/core/internal/storage"
 	"github.com/ankodd/demoexam/core/internal/utils/errs"
 	"github.com/ankodd/demoexam/core/internal/utils/hash"
@@ -15,6 +16,7 @@ import (
 func Login(user *models.User, s *storage.UserStorage) error {
 	// Fetching user in storage
 	fetchedUser, err := s.FetchByKey("username", user.Username)
+	fmt.Println(user.Username)
 	if err != nil {
 		return errors.New(errs.NotFoundErr)
 	}
@@ -23,6 +25,8 @@ func Login(user *models.User, s *storage.UserStorage) error {
 	if err := hash.VerifyPassword(fetchedUser.Password, user.Password); err != nil {
 		return errors.New(errs.AuthorizationFailedErr)
 	}
+
+	user.ID = fetchedUser.ID
 
 	return nil
 }
